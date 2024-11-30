@@ -2,6 +2,10 @@ package com.example.ballzalapha;
 
 import static com.example.ballzalapha.FBRef.refStamp;
 import static com.example.ballzalapha.FBRef.storageRef;
+
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import android.app.Activity;
@@ -46,7 +50,7 @@ public class PicFromCamera extends AppCompatActivity {
     private static final int REQUEST_STAMP_CAPTURE = 201;
     private StorageReference refImg;
     private Bitmap imageBitmap;
-
+    private String lastStamp;
 
 
     @Override
@@ -57,7 +61,7 @@ public class PicFromCamera extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
         }
-          }
+    }
 
     /**
      * takeStamp method
@@ -95,16 +99,18 @@ public class PicFromCamera extends AppCompatActivity {
 
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data_back) {
         super.onActivityResult(requestCode, resultCode, data_back);
+
+        Date date = Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("yyyymmddhhmmss");
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_STAMP_CAPTURE) {
-                // Upload camera thumbnail image file
-                    Bundle extras = data_back.getExtras();
-                    if (extras != null) {
-                        uri = data_back.getData();
-                        refImg = refStamp.child(uri.getLastPathSegment() + ".png");
-                        imageBitmap = (Bitmap) extras.get("data");
-                        iv.setImageBitmap(imageBitmap);
-                    }
+                Bundle extras = data_back.getExtras();
+                if (extras != null) {
+                    lastStamp = dateFormat.format(date);
+                    refImg = refStamp.child(lastStamp+".png");
+                    imageBitmap = (Bitmap) extras.get("data");
+                    iv.setImageBitmap(imageBitmap);
+                }
             }
         }
     }
