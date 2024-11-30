@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "482830489737",
+    "project_id": "ballz-ecf0a",
+    "storage_bucket": "ballz-ecf0a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482830489737:android:d886881d2237574740ce58",
+        "android_client_info": {
+          "package_name": "com.example.ballzalapha"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJbVMPVubDeuvgDgIv3pufQ5-7CJNvs9I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/AddUser"
+        android:title="Add Users"
+        android:orderInCategory="110"/>
+
+    <item
+        android:id="@+id/PicGallery"
+        android:title="Upload From Gallery"
+        android:orderInCategory="120"/>
+
+    <item
+        android:id="@+id/PicCamera"
+        android:title="Upload From Camera"
+        android:orderInCategory="130"/>
+
+    <item
+        android:id="@+id/Location"
+        android:title="Location Tracking"
+        android:orderInCategory="140"/>
+
+    <item
+        android:id="@+id/NFC"
+        android:title="Read NFC"
+        android:orderInCategory="150" />
+</menu>
