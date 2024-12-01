@@ -1,7 +1,11 @@
 package com.example.ballzalapha;
 
+import static android.app.ProgressDialog.show;
+
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NdefMessage;
@@ -16,6 +20,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -25,8 +30,10 @@ import java.util.Arrays;
 
 public class NFC_Reading extends AppCompatActivity {
     TextView tV;
+    AlertDialog ad;
     NfcAdapter nfcAdapter;
     IntentFilter intentFilter1;
+    Context context;
     IntentFilter[] readFilter;
     PendingIntent pendingIntent;
     @Override
@@ -34,10 +41,11 @@ public class NFC_Reading extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nfc_reading);
         tV = findViewById(R.id.albert);
+        context = this;
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         Intent intent = new Intent(this, getClass());
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         try {
             intentFilter1 = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED, "text/plain");
         } catch (IntentFilter.MalformedMimeTypeException e) {
@@ -62,6 +70,7 @@ public class NFC_Reading extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         processNFC(intent);
+        ad.dismiss();
     }
     @SuppressLint("NewApi")
     public void processNFC(Intent intent) {
@@ -73,7 +82,7 @@ public class NFC_Reading extends AppCompatActivity {
                     switch (record.getTnf()) {
                         case NdefRecord.TNF_WELL_KNOWN:
                             if (Arrays.equals(record.getType(), NdefRecord.RTD_TEXT)) {
-                                tV.setText(tV.getText() + new String(record.getPayload()));
+                                tV.setText("  the text: "+ new String(record.getPayload()));
                             }
                     }
                 }
@@ -82,18 +91,21 @@ public class NFC_Reading extends AppCompatActivity {
     }
 
     private void enableRead() {
-        nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+        nfcAdapter.enableForegroundDispatch((Activity) context, pendingIntent, null, null);
     }
 
     private void disableRead() {
         if (nfcAdapter != null) {
-            nfcAdapter.disableForegroundDispatch(this);
+            nfcAdapter.disableForegroundDispatch((Activity) context);
         }
     }
 
     public void readnfc(View view) {
+        AlertDialog.Builder adb = new AlertDialog.Builder(context);
+        adb.setMessage("Waiting for NFC tag...");
+        ad = adb.create();
         enableRead();
-    }
+        ad.show();    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
